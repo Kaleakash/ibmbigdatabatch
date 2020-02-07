@@ -1,18 +1,7 @@
-class Car {
-	String color;
-	float price;
-	int wheel;
-	void start() {
-
-	}
-	void appliedGear() {
-
-	}
-	void moving() {
-
-	}
-	void stop() {
-
-	}
+public class A {}
+class B {}
+public class Demo {
+	public static void main(String args[]) {
 	
+	}
 }
