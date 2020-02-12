@@ -2,6 +2,10 @@ package com;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -40,15 +44,25 @@ public class Demo extends HttpServlet {
 		PrintWriter pw = response.getWriter();
 		RequestDispatcher rd1 = request.getRequestDispatcher("Dashboard");
 		RequestDispatcher rd2 = request.getRequestDispatcher("index.html");
-		
+		try {
+	Class.forName("oracle.jdbc.driver.OracleDriver");
+	Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/XE", "system", "tiger");
+	PreparedStatement pstmt = 
+con.prepareStatement("select * from login where username = ? and password = ?");
 		String name = request.getParameter("user");
 		String pass = request.getParameter("pass");
-		if(name.equals("Ajay") && pass.equals("123")) {
-			pw.println("Successfully Login");
+		pstmt.setString(1, name);
+		pstmt.setString(2, pass);
+		ResultSet rs = pstmt.executeQuery();
+		if(rs.next()) {
+			pw.println("<h1>Successfully Login</h1>");
 			rd1.forward(request, response);
 		}else {
-			pw.println("Failure try once again<br>");
+			pw.println("<h7>Failure try once again</h7><br>");
 			rd2.include(request, response);
+		}
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
 	}
 }
